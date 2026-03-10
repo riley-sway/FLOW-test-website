@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flow Real Property Law</title>
+  <link rel="icon" href="brand_assets/favicon_300.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyan: '#26a9e0',
+            'cyan-light': '#4dbfe9',
+            'cyan-dark': '#1a96d0',
+            navy: '#1d2e5d',
+            'navy-light': '#243d78',
+            'navy-dark': '#111f4a',
+            'text-muted': '#6b8099',
+            'surface': '#f0f4f8',
+            'border': '#d8e4ef',
+          },
+          fontFamily: {
+            display: ['Marcellus', 'Marcellus Placeholder', 'serif'],
+            sans: ['DM Sans', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #fff; }
+    body { font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; color: #1d2e5d; }
+
+    /* Nav */
+    .nav-link { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.8); letter-spacing: 0.02em; transition: color 0.2s ease; }
+    .nav-link:hover { color: #26a9e0; }
+
+    /* Headings */
+    .heading-display { font-family: 'Marcellus', serif; font-weight: 400 !important; letter-spacing: -0.02em; line-height: 1.05; }
+    .heading-section { font-family: 'Marcellus', serif; font-weight: 400 !important; letter-spacing: -0.015em; line-height: 1.1; }
+
+    /* Shimmer text effect */
+    @keyframes shimmer-sweep {
+      0%   { background-position-x: 250%; }
+      50%  { background-position-x: -100%; }
+      100% { background-position-x: -100%; }
+    }
+    .shimmer-text {
+      background-color: #1d2e5d;
+      background-image: linear-gradient(to right,
+        #1d2e5d 0%,
+        #26a9e0 35%,
+        #a8e4f8 50%,
+        #26a9e0 65%,
+        #1d2e5d 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-repeat: no-repeat;
+      background-size: 50% 100%;
+      background-position-x: 250%;
+      animation: shimmer-sweep 6s linear 1.5s infinite;
+    }
+
+    /* Gold button */
+    .btn-gold {
+      background: #26a9e0;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 11px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .btn-gold:hover { background: #1a96d0; }
+    .btn-gold:active { transform: scale(0.98); }
+
+    /* Outline button */
+    .btn-outline {
+      background: transparent;
+      color: #1d2e5d;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      border: 1px solid #1d2e5d;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .btn-outline:hover { background: #1d2e5d; color: #fff; }
+    .btn-outline:active { transform: scale(0.98); }
+
+    /* Ticker */
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-track { animation: ticker 28s linear infinite; display: flex; width: max-content; }
+    .ticker-track:hover { animation-play-state: paused; }
+
+    /* Stat number */
+    .stat-num { font-family: 'Marcellus', serif; font-size: 52px; font-weight: 400; line-height: 1; letter-spacing: -0.03em; color: #1d2e5d; }
+    .stat-label { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; color: #6b8099; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+
+    /* Team card */
+    .team-card { position: relative; overflow: hidden; }
+    .team-card img { transition: transform 0.4s ease; }
+    .team-card:hover img { transform: scale(1.04); }
+    .team-card .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(29,51,100,0.92) 0%, transparent 60%); padding: 24px 20px 20px; transition: opacity 0.3s ease; }
+
+    /* Service card */
+    .service-card { border: 1px solid #d8e4ef; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .service-card:hover { border-color: #26a9e0; box-shadow: 0 4px 24px rgba(41,171,226,0.12); }
+
+    /* Divider dot */
+    .dot-divider { width: 4px; height: 4px; background: #26a9e0; border-radius: 50%; display: inline-block; }
+
+    /* Layered shadow */
+    .shadow-elevated {
+      box-shadow:
+        0 1px 2px rgba(29,51,100,0.06),
+        0 4px 12px rgba(29,51,100,0.08),
+        0 12px 32px rgba(29,51,100,0.06);
+    }
+
+    /* Focus styles */
+    a:focus-visible, button:focus-visible { outline: 2px solid #26a9e0; outline-offset: 2px; }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE — MOBILE
+    ═══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* Nav */
+      .nav-inner { height: 64px !important; padding: 0 20px !important; }
+      .nav-logo { height: 52px !important; }
+      .nav-link { display: none !important; }
+      .nav-links { gap: 12px !important; }
+
+      /* Hero eyebrow */
+      .hero-eyebrow-wrap { padding: 28px 20px 0 !important; }
+      .hero-h1 { font-size: 36px !important; }
+
+      /* Hero image */
+      .hero-image-wrap { height: 240px !important; }
+      .hero-image-text { font-size: 28px !important; padding-top: 16px !important; }
+
+      /* Hero below */
+      .hero-below-grid { grid-template-columns: 1fr !important; gap: 40px !important; padding: 48px 20px 56px !important; }
+      .hero-h2 { font-size: 28px !important; margin-bottom: 20px !important; }
+      .hero-value-grid { grid-template-columns: 1fr 1fr !important; gap: 28px 20px !important; }
+      .hero-byline { flex-wrap: wrap !important; }
+      .hero-byline-buttons { margin-left: 0 !important; width: 100% !important; }
+      .hero-byline-buttons > div { flex-wrap: wrap !important; }
+      .hero-eyebrow-since { display: block !important; }
+
+      /* Ticker */
+      .ticker-section { margin-top: 0 !important; }
+
+      /* Expertise */
+      .expertise-section { padding: 56px 0 !important; }
+      .expertise-inner { padding: 0 20px !important; }
+      .expertise-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; margin-bottom: 32px !important; }
+      .expertise-h2 { font-size: 38px !important; }
+      .expertise-header-right { max-width: 100% !important; flex-shrink: unset !important; }
+      .expertise-cards { grid-template-columns: 1fr !important; }
+      .expertise-card-inner { padding: 36px 28px !important; }
+
+      /* Dark CTA */
+      .cta-dark { padding: 56px 0 !important; }
+      .cta-dark-inner { flex-direction: column !important; align-items: flex-start !important; gap: 28px !important; padding: 0 20px !important; }
+      .cta-dark-h2 { font-size: 32px !important; }
+      .cta-dark-right { text-align: left !important; flex-shrink: unset !important; }
+
+      /* Stats */
+      .stats-section { padding: 56px 0 !important; }
+      .stats-inner { padding: 0 20px !important; }
+      .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 36px 24px !important; }
+      .stats-cell { padding: 0 !important; border-right: none !important; border-bottom: none !important; }
+      .stat-num { font-size: 40px !important; }
+
+      /* Ryan */
+      .ryan-section { padding: 56px 0 !important; }
+      .ryan-inner { padding: 0 20px !important; }
+      .ryan-h2 { font-size: 38px !important; }
+      .ryan-grid { grid-template-columns: 1fr !important; }
+      .ryan-photo { height: 280px !important; }
+      .ryan-bio { height: auto !important; padding: 40px 28px !important; }
+      .ryan-bio-h3 { font-size: 28px !important; }
+
+      /* Cyan CTA */
+      .cta-cyan { padding: 48px 0 !important; }
+      .cta-cyan-inner { flex-direction: column !important; align-items: flex-start !important; gap: 24px !important; padding: 0 20px !important; }
+      .cta-cyan-h2 { font-size: 30px !important; }
+      .cta-cyan-buttons { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; flex-shrink: unset !important; width: 100% !important; }
+      .cta-cyan-buttons a { text-align: center !important; }
+
+      /* Testimonials */
+      .testimonials-section { padding: 56px 0 !important; }
+      .testimonials-inner { padding: 0 20px !important; }
+      .testimonials-h2 { font-size: 38px !important; }
+      .testimonials-grid { grid-template-columns: 1fr !important; }
+      .testimonial-card { padding: 32px 24px !important; }
+
+      /* Contact */
+      .contact-section { padding: 56px 0 !important; }
+      .contact-inner { padding: 0 20px !important; }
+      .contact-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+      .contact-h2 { font-size: 38px !important; }
+      .contact-form-wrap { padding: 32px 24px !important; }
+
+      /* Footer */
+      .footer-wrap { padding: 56px 0 0 !important; }
+      .footer-inner { padding: 0 20px !important; }
+      .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 36px !important; padding-bottom: 40px !important; }
+      .footer-brand { grid-column: 1 / -1 !important; }
+      .footer-bottom-row { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+      .footer-bottom-links { flex-wrap: wrap !important; gap: 16px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════════ -->
+<nav style="background:#1d2e5d; border-bottom:1px solid rgba(255,255,255,0.1); position:sticky; top:0; z-index:50;">
+  <div class="nav-inner" style="max-width:1200px; margin:0 auto; padding:0 40px; display:flex; align-items:center; justify-content:space-between; height:96px;">
+    <!-- Logo -->
+    <a href="#" style="display:flex; align-items:center; flex-shrink:0;">
+      <img class="nav-logo" src="brand_assets/Flow-logo_transparentwhite.png" alt="Flow Real Property Law" style="height:82px; width:auto; object-fit:contain;" />
+    </a>
+
+    <!-- Nav links -->
+    <div class="nav-links" style="display:flex; align-items:center; gap:36px;">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="tel:4039323333" class="btn-gold" style="flex-shrink:0; text-decoration:none;">403-932-3333</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<section style="background:#fff;">
+
+  <!-- Above-image area: eyebrow + first headline line -->
+  <div class="hero-eyebrow-wrap" style="text-align:center; padding:40px 40px 0;">
+    <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:#26a9e0; margin:0 0 36px; display:inline-flex; align-items:center; gap:12px;">
+      <span style="display:inline-block; width:32px; height:1px; background:#26a9e0;"></span>
+      Residential Real Estate Law
+      <span style="display:inline-block; width:32px; height:1px; background:#26a9e0;"></span>
+    </p>
+    <h1 class="hero-h1 heading-display shimmer-text" style="font-size:68px; letter-spacing:-0.01em; color:#1d2e5d; margin:0; line-height:1.0; text-transform:uppercase;">
+      Moving Effortlessly
+    </h1>
+  </div>
+
+  <!-- Full-width image with second headline line at top -->
+  <div class="hero-image-wrap" style="position:relative; width:100%; height:420px; overflow:hidden;">
+    <img src="images/boardroom.png" alt="Boardroom" style="width:100%; height:100%; object-fit:cover; object-position:center 30%;" />
+    <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(29,46,93,0.55) 0%, rgba(29,46,93,0.25) 50%, rgba(29,46,93,0.35) 100%);"></div>
+    <div style="position:absolute; top:0; left:0; right:0; text-align:center; padding-top:28px;">
+      <p class="hero-image-text heading-display" style="font-size:56px; font-style:normal; color:#fff; margin:0; line-height:1.05;">
+        Through Real Estate
+      </p>
+    </div>
+  </div>
+
+  <!-- Below-image section: left statement + right 2×2 grid -->
+  <div class="hero-below-grid" style="max-width:1200px; margin:0 auto; padding:72px 40px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start;">
+
+    <!-- Left: bold statement + lawyer byline -->
+    <div>
+      <p class="hero-eyebrow-since" style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:#26a9e0; margin:0 0 20px; display:inline-flex; align-items:center; gap:10px;">
+        <span style="display:inline-block; width:24px; height:1px; background:#26a9e0;"></span>
+        Since 2004
+      </p>
+      <h2 class="hero-h2 heading-display" style="font-size:44px; color:#1d2e5d; margin:0 0 32px; line-height:1.1; text-transform:uppercase; letter-spacing:-0.01em;">
+        We guide you through every step of your property transaction.
+      </h2>
+      <p style="font-family:'DM Sans',sans-serif; font-size:15px; font-weight:300; color:#6b8099; line-height:1.75; margin:0 0 40px;">
+        Flow Real Property Law provides expert legal guidance for all your residential real estate needs. Effortless transactions are ensured with our dedicated legal support.
+      </p>
+      <!-- Lawyer byline -->
+      <div class="hero-byline" style="display:flex; align-items:center; gap:16px; padding-top:32px; border-top:1px solid #d8e4ef;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#1d2e5d; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <span style="font-family:'Marcellus',serif; font-size:20px; color:#26a9e0;">R</span>
+        </div>
+        <div>
+          <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:#1d2e5d; margin:0; letter-spacing:0.04em; text-transform:uppercase;">Ryan MacKay</p>
+          <p style="font-family:'DM Sans',sans-serif; font-size:12px; color:#6b8099; margin:2px 0 0;">Principal Lawyer</p>
+        </div>
+        <div class="hero-byline-buttons" style="margin-left:8px;">
+          <div style="display:flex; gap:16px;">
+            <a href="tel:4039323333" class="btn-gold" style="text-decoration:none; font-size:12px; padding:10px 20px;">403-932-3333</a>
+            <a href="#contact" class="btn-outline" style="text-decoration:none; font-size:12px; padding:10px 20px;">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: 2×2 value prop grid -->
+    <div class="hero-value-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:40px 48px;">
+      <!-- 1 -->
+      <div>
+        <div style="width:44px; height:44px; margin-bottom:16px; color:#26a9e0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <h3 style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 10px;">Residential Focus</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:#6b8099; line-height:1.7; margin:0;">Exclusively dedicated to residential real estate — purchases, sales, refinancing, and title transfers.</p>
+      </div>
+      <!-- 2 -->
+      <div>
+        <div style="width:44px; height:44px; margin-bottom:16px; color:#26a9e0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 10px;">Client-Centered</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:#6b8099; line-height:1.7; margin:0;">Your goals guide every decision. We keep you informed and supported at every stage of the transaction.</p>
+      </div>
+      <!-- 3 -->
+      <div>
+        <div style="width:44px; height:44px; margin-bottom:16px; color:#26a9e0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        </div>
+        <h3 style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 10px;">Proven Track Record</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:#6b8099; line-height:1.7; margin:0;">Hundreds of seamless Alberta property transactions completed with a 5-star client rating.</p>
+      </div>
+      <!-- 4 -->
+      <div>
+        <div style="width:44px; height:44px; margin-bottom:16px; color:#26a9e0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 10px;">Local Expertise</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:300; color:#6b8099; line-height:1.7; margin:0;">Cochrane-based and Alberta licensed — deeply familiar with local market nuances and regulations.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TICKER / TRUST LOGOS
+═══════════════════════════════════════════════ -->
+<section class="ticker-section" style="background:#f0f4f8; border-top:1px solid #d8e4ef; border-bottom:1px solid #d8e4ef; padding:20px 0; margin-top:0; overflow:hidden;">
+  <div class="ticker-track">
+    <div style="display:flex; align-items:center; gap:56px; padding:0 28px;">
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Property Law</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Title &amp; Conveyancing</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Lease Agreements</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Dispute Resolution</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Commercial Property</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Strata Law</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Development &amp; Planning</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Mortgages &amp; Finance</span>
+      <span class="dot-divider"></span>
+    </div>
+    <div style="display:flex; align-items:center; gap:56px; padding:0 28px;">
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Property Law</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Title &amp; Conveyancing</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Lease Agreements</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Dispute Resolution</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Commercial Property</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Strata Law</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Development &amp; Planning</span>
+      <span class="dot-divider"></span>
+      <span style="font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#6b8099; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Mortgages &amp; Finance</span>
+      <span class="dot-divider"></span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     LEGAL SOLUTIONS / PRACTICE AREAS
+═══════════════════════════════════════════════ -->
+<section class="expertise-section" style="padding:96px 0; background:#fff;">
+  <div class="expertise-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <!-- Section header -->
+    <div class="expertise-header" style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:56px; gap:32px;">
+      <div style="flex:1;">
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 14px;">About Flow Real Property Law</p>
+        <h2 class="expertise-h2 heading-section" style="font-size:56px; color:#1d2e5d; margin:0;">Our <em style="font-style:italic;">Expertise</em></h2>
+      </div>
+      <div class="expertise-header-right" style="max-width:320px; flex-shrink:0;">
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.75; margin:0;">Flow Real Property Law provides expert legal guidance for all your residential real estate needs. Effortless transactions are ensured with our dedicated legal support.</p>
+        <a href="#contact" style="display:inline-flex; align-items:center; gap:8px; margin-top:20px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:#1d2e5d; text-decoration:none; letter-spacing:0.06em; text-transform:uppercase; border-bottom:1px solid #26a9e0; padding-bottom:2px; transition:color 0.2s ease;" onmouseover="this.style.color='#26a9e0'" onmouseout="this.style.color='#1d2e5d'">Get in Touch</a>
+      </div>
+    </div>
+
+    <!-- About cards grid -->
+    <div class="expertise-cards" style="display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:#d8e4ef;">
+      <!-- Card 1 -->
+      <div class="service-card expertise-card-inner" style="background:#fff; padding:48px 40px;">
+        <div style="width:40px; height:40px; background:#f0f4f8; border-radius:2px; display:flex; align-items:center; justify-content:center; margin-bottom:28px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 style="font-family:'Marcellus',serif; font-size:26px; color:#1d2e5d; margin:0 0 16px; line-height:1.2;">Our Expertise</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.8; margin:0;">Flow Real Property Law provides expert legal guidance for all your residential real estate needs. Effortless transactions are ensured with our dedicated legal support.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card expertise-card-inner" style="background:#fff; padding:48px 40px;">
+        <div style="width:40px; height:40px; background:#f0f4f8; border-radius:2px; display:flex; align-items:center; justify-content:center; margin-bottom:28px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3 style="font-family:'Marcellus',serif; font-size:26px; color:#1d2e5d; margin:0 0 16px; line-height:1.2;">Client-Centered Approach</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.8; margin:0;">Your residential real estate journey is our priority. We partner with you, offering clear communication and dedicated support at every stage of your transaction.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card expertise-card-inner" style="background:#fff; padding:48px 40px;">
+        <div style="width:40px; height:40px; background:#f0f4f8; border-radius:2px; display:flex; align-items:center; justify-content:center; margin-bottom:28px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 style="font-family:'Marcellus',serif; font-size:26px; color:#1d2e5d; margin:0 0 16px; line-height:1.2;">Proven Track Record</h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.8; margin:0;">Because we have years of experience in the residential real estate market, you can rely on our effective legal solutions. Our in-depth understanding of the law ensures your real estate transaction is consistently smooth and secure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     DARK CTA BANNER
+═══════════════════════════════════════════════ -->
+<section class="cta-dark" style="background:#1d2e5d; padding:80px 0; position:relative; overflow:hidden;">
+  <div style="position:absolute;inset:0;opacity:0.04;">
+    <svg width="100%" height="100%"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)"/></svg>
+  </div>
+  <div class="cta-dark-inner" style="max-width:1200px; margin:0 auto; padding:0 40px; display:flex; align-items:center; justify-content:space-between; gap:40px; position:relative;">
+    <div>
+      <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 16px;">Ready to Move Effortlessly?</p>
+      <h2 class="cta-dark-h2 heading-section" style="font-size:48px; color:#fff; margin:0; line-height:1.1;">Let's Make Your<br/><em style="font-style:italic; color:#26a9e0;">Transaction Seamless</em></h2>
+    </div>
+    <div class="cta-dark-right" style="flex-shrink:0; text-align:right;">
+      <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.7; margin:0 0 28px; max-width:280px;">Call us directly or drop us a line. We're here to guide you through every step of your residential real estate transaction.</p>
+      <a href="tel:4039323333" class="btn-gold" style="font-size:13px; padding:14px 32px; text-decoration:none; display:inline-block;">Call 403-932-3333</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     STATS ROW
+═══════════════════════════════════════════════ -->
+<section class="stats-section" style="background:#fff; padding:80px 0; border-bottom:1px solid #d8e4ef;">
+  <div class="stats-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <div class="stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:0;">
+      <div class="stats-cell" style="padding:0 40px 0 0; border-right:1px solid #d8e4ef;">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Residential Focus</div>
+      </div>
+      <div class="stats-cell" style="padding:0 40px 0 40px; border-right:1px solid #d8e4ef;">
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Client Reviews</div>
+      </div>
+      <div class="stats-cell" style="padding:0 40px 0 40px; border-right:1px solid #d8e4ef;">
+        <div class="stat-num">AB</div>
+        <div class="stat-label">Alberta Licensed</div>
+      </div>
+      <div class="stats-cell" style="padding:0 0 0 40px;">
+        <div class="stat-num" style="font-size:32px;">Cochrane</div>
+        <div class="stat-label">Alberta, Canada</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT / TEAM
+═══════════════════════════════════════════════ -->
+<section class="ryan-section" style="background:#f0f4f8; padding:96px 0;">
+  <div class="ryan-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <!-- Header -->
+    <div style="margin-bottom:56px;">
+      <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 14px;">About the Advisor</p>
+      <h2 class="ryan-h2 heading-section" style="font-size:56px; color:#1d2e5d; margin:0;">Meet<br/><em style="font-style:italic;">Ryan</em></h2>
+    </div>
+
+    <!-- Team grid -->
+    <div class="ryan-grid" style="display:grid; grid-template-columns:1fr 2fr; gap:3px;">
+      <!-- Ryan photo -->
+      <div class="team-card ryan-photo" style="background:#1d2e5d; height:460px; cursor:pointer;">
+        <img src="https://placehold.co/400x460/1d3364/29abe2?text=Ryan" alt="Ryan — Principal Lawyer" style="width:100%; height:100%; object-fit:cover; display:block;" />
+        <div class="overlay">
+          <p style="font-family:'Marcellus',serif; font-size:24px; color:#fff; margin:0 0 4px;">Ryan</p>
+          <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:#26a9e0; letter-spacing:0.08em; text-transform:uppercase; margin:0;">Principal Lawyer</p>
+        </div>
+      </div>
+
+      <!-- Bio panel -->
+      <div class="ryan-bio" style="background:#1d2e5d; height:460px; display:flex; flex-direction:column; justify-content:center; padding:56px 64px;">
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 20px;">Flow Real Property Law</p>
+        <h3 class="ryan-bio-h3 heading-section" style="font-size:40px; color:#fff; margin:0 0 24px; line-height:1.1;">Dedicated to Your<br/><em style="font-style:italic;">Real Estate Journey</em></h3>
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.8; margin:0 0 36px; max-width:480px;">Ryan and his team at Flow Real Property Law are committed to making your residential real estate transaction as smooth and stress-free as possible. With deep knowledge of Alberta property law and a client-first approach, you're in trusted hands.</p>
+        <a href="tel:4039323333" style="display:inline-flex; align-items:center; gap:10px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#26a9e0; text-decoration:none; transition:opacity 0.2s ease;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          403-932-3333
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     CYAN CTA BANNER
+═══════════════════════════════════════════════ -->
+<section class="cta-cyan" style="background:#26a9e0; padding:64px 0; position:relative; overflow:hidden;">
+  <div style="position:absolute;inset:0;opacity:0.06;">
+    <svg width="100%" height="100%"><filter id="noise2"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise2)"/></svg>
+  </div>
+  <div class="cta-cyan-inner" style="max-width:1200px; margin:0 auto; padding:0 40px; display:flex; align-items:center; justify-content:space-between; gap:32px; position:relative;">
+    <div>
+      <h2 class="cta-cyan-h2 heading-section" style="font-size:44px; color:#fff; margin:0; line-height:1.1;">Moving Effortlessly<br/><em style="font-style:italic;">Starts Here.</em></h2>
+    </div>
+    <div class="cta-cyan-buttons" style="flex-shrink:0; display:flex; gap:16px; align-items:center;">
+      <a href="tel:4039323333" style="background:#1d2e5d; color:#fff; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:13px 28px; border:none; cursor:pointer; text-decoration:none; transition:opacity 0.2s ease; display:inline-block;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Call 403-932-3333</a>
+      <a href="#contact" style="background:transparent; color:#fff; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:12px 28px; border:1px solid rgba(255,255,255,0.6); cursor:pointer; text-decoration:none; transition:background 0.2s ease; display:inline-block;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">Drop Us a Line</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIAL
+═══════════════════════════════════════════════ -->
+<section class="testimonials-section" style="background:#fff; padding:96px 0;">
+  <div class="testimonials-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <div style="margin-bottom:56px;">
+      <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 14px;">Testimonials</p>
+      <h2 class="testimonials-h2 heading-section" style="font-size:56px; color:#1d2e5d; margin:0;">What Our Clients<br/><em style="font-style:italic;">Say About Us</em></h2>
+    </div>
+
+    <div class="testimonials-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:#d8e4ef;">
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card" style="background:#fff; padding:40px 36px;">
+        <div style="display:flex; gap:3px; margin-bottom:24px;">
+          <span style="color:#26a9e0; font-size:16px;">★★★★★</span>
+        </div>
+        <p style="font-family:'Marcellus',serif; font-size:20px; font-weight:400; color:#1d2e5d; line-height:1.65; margin:0 0 28px; font-style:italic;">"Ryan is nothing short of amazing, this is the guy who will back you every step of the way."</p>
+        <div style="display:flex; align-items:center; gap:14px; padding-top:24px; border-top:1px solid #d8e4ef;">
+          <div style="width:40px; height:40px; background:#f0f4f8; border-radius:50%; flex-shrink:0;"></div>
+          <div>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#1d2e5d; margin:0;">Danielle McInnis</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:#6b8099; margin:0;">Flow Client</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card" style="background:#fff; padding:40px 36px;">
+        <div style="display:flex; gap:3px; margin-bottom:24px;">
+          <span style="color:#26a9e0; font-size:16px;">★★★★★</span>
+        </div>
+        <p style="font-family:'Marcellus',serif; font-size:20px; font-weight:400; color:#1d2e5d; line-height:1.65; margin:0 0 28px; font-style:italic;">"Ryan and his team at Flow Real Property Law handled the legal end of our recent home sale…everything went through without a glitch."</p>
+        <div style="display:flex; align-items:center; gap:14px; padding-top:24px; border-top:1px solid #d8e4ef;">
+          <div style="width:40px; height:40px; background:#f0f4f8; border-radius:50%; flex-shrink:0;"></div>
+          <div>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#1d2e5d; margin:0;">Susan Rawlyk</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:#6b8099; margin:0;">Flow Client</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card" style="background:#fff; padding:40px 36px;">
+        <div style="display:flex; gap:3px; margin-bottom:24px;">
+          <span style="color:#26a9e0; font-size:16px;">★★★★★</span>
+        </div>
+        <p style="font-family:'Marcellus',serif; font-size:20px; font-weight:400; color:#1d2e5d; line-height:1.65; margin:0 0 28px; font-style:italic;">"Ryan was a pleasure to work with. He is very knowledgeable, super personable and made us feel completely at ease throughout the process."</p>
+        <div style="display:flex; align-items:center; gap:14px; padding-top:24px; border-top:1px solid #d8e4ef;">
+          <div style="width:40px; height:40px; background:#f0f4f8; border-radius:50%; flex-shrink:0;"></div>
+          <div>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#1d2e5d; margin:0;">Tamara Smith</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:#6b8099; margin:0;">Flow Client</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 4 -->
+      <div class="testimonial-card" style="background:#fff; padding:40px 36px;">
+        <div style="display:flex; gap:3px; margin-bottom:24px;">
+          <span style="color:#26a9e0; font-size:16px;">★★★★★</span>
+        </div>
+        <p style="font-family:'Marcellus',serif; font-size:20px; font-weight:400; color:#1d2e5d; line-height:1.65; margin:0 0 28px; font-style:italic;">"A smooth and stress free process. This was my second time using Ryan's services for the sale of my home."</p>
+        <div style="display:flex; align-items:center; gap:14px; padding-top:24px; border-top:1px solid #d8e4ef;">
+          <div style="width:40px; height:40px; background:#f0f4f8; border-radius:50%; flex-shrink:0;"></div>
+          <div>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:#1d2e5d; margin:0;">Veronica Zimmerman</p>
+            <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:#6b8099; margin:0;">Repeat Client</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT US
+═══════════════════════════════════════════════ -->
+<section id="contact" class="contact-section" style="background:#f0f4f8; padding:96px 0;">
+  <div class="contact-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <div class="contact-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start;">
+
+      <!-- Left — info -->
+      <div>
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:#26a9e0; margin:0 0 14px;">Contact Us</p>
+        <h2 class="contact-h2 heading-section" style="font-size:52px; color:#1d2e5d; margin:0 0 24px;">Drop Us<br/><em style="font-style:italic;">a Line</em></h2>
+        <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.8; margin:0 0 48px; max-width:380px;">We'd love to hear from you. Reach out by phone, email, or fill out the form and we'll be in touch shortly.</p>
+
+        <!-- Contact details -->
+        <div style="display:flex; flex-direction:column; gap:28px;">
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:40px; height:40px; background:#fff; border:1px solid #d8e4ef; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 4px;">Address</p>
+              <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; line-height:1.6; margin:0;">307 1 St E<br/>Cochrane, Alberta, Canada</p>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:40px; height:40px; background:#fff; border:1px solid #d8e4ef; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 4px;">Phone</p>
+              <a href="tel:4039323333" style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#26a9e0'" onmouseout="this.style.color='#6b8099'">403-932-3333</a>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:40px; height:40px; background:#fff; border:1px solid #d8e4ef; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; margin:0 0 4px;">Email</p>
+              <a href="mailto:ryan@flowlawyers.ca" style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#26a9e0'" onmouseout="this.style.color='#6b8099'">ryan@flowlawyers.ca</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right — form -->
+      <div class="contact-form-wrap" style="background:#fff; padding:48px; border:1px solid #d8e4ef;">
+        <h3 style="font-family:'Marcellus',serif; font-size:28px; color:#1d2e5d; margin:0 0 32px; line-height:1.2;">Send Us a Message</h3>
+
+        <form onsubmit="return false;" style="display:flex; flex-direction:column; gap:20px;">
+          <div>
+            <label style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; display:block; margin-bottom:8px;">Name</label>
+            <input type="text" placeholder="Your full name" style="width:100%; font-family:'DM Sans',sans-serif; font-size:14px; color:#1d2e5d; background:#f0f4f8; border:1px solid transparent; padding:13px 16px; outline:none; transition:border-color 0.2s ease;" onfocus="this.style.borderColor='#26a9e0'; this.style.background='#fff';" onblur="this.style.borderColor='transparent'; this.style.background='#f0f4f8';" />
+          </div>
+
+          <div>
+            <label style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; display:block; margin-bottom:8px;">Email</label>
+            <input type="email" placeholder="your@email.com" style="width:100%; font-family:'DM Sans',sans-serif; font-size:14px; color:#1d2e5d; background:#f0f4f8; border:1px solid transparent; padding:13px 16px; outline:none; transition:border-color 0.2s ease;" onfocus="this.style.borderColor='#26a9e0'; this.style.background='#fff';" onblur="this.style.borderColor='transparent'; this.style.background='#f0f4f8';" />
+          </div>
+
+          <div>
+            <label style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:#1d2e5d; display:block; margin-bottom:8px;">Message</label>
+            <textarea placeholder="How can we help you?" rows="4" style="width:100%; font-family:'DM Sans',sans-serif; font-size:14px; color:#1d2e5d; background:#f0f4f8; border:1px solid transparent; padding:13px 16px; outline:none; resize:none; transition:border-color 0.2s ease;" onfocus="this.style.borderColor='#26a9e0'; this.style.background='#fff';" onblur="this.style.borderColor='transparent'; this.style.background='#f0f4f8';"></textarea>
+          </div>
+
+          <div style="display:flex; align-items:flex-start; gap:10px;">
+            <input type="checkbox" id="emaillist" style="width:14px; height:14px; margin-top:2px; accent-color:#26a9e0; flex-shrink:0;" />
+            <label for="emaillist" style="font-family:'DM Sans',sans-serif; font-size:12px; color:#6b8099; line-height:1.6; cursor:pointer;">Sign up for our email list for updates, promotions, and more.</label>
+          </div>
+
+          <button type="submit" class="btn-gold" style="align-self:flex-start; font-size:12px; padding:13px 32px; margin-top:4px;">Send Message</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer class="footer-wrap" style="background:#1d2e5d; padding:72px 0 0;">
+  <div class="footer-inner" style="max-width:1200px; margin:0 auto; padding:0 40px;">
+    <div class="footer-grid" style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:64px; padding-bottom:64px;">
+      <!-- Brand col -->
+      <div class="footer-brand">
+        <img src="brand_assets/Flow-logo_transparentwhite.png" alt="Flow Real Property Law" style="height:60px; width:auto; object-fit:contain; margin-bottom:24px; display:block;" />
+        <p style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; line-height:1.75; margin:0 0 28px; max-width:280px;">Expert legal guidance for all your residential real estate needs. Effortless transactions are ensured with our dedicated legal support.</p>
+        <div style="display:flex; gap:12px;">
+          <a href="#" style="width:36px; height:36px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; transition:background 0.2s ease;" onmouseover="this.style.background='rgba(41,171,226,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8099" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" style="width:36px; height:36px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; transition:background 0.2s ease;" onmouseover="this.style.background='rgba(41,171,226,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8099" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div>
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:#26a9e0; margin:0 0 20px;">Quick Links</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="#" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Home</a></li>
+          <li><a href="#contact" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div>
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:#26a9e0; margin:0 0 20px;">About</p>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;">
+          <li><a href="#" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Our Expertise</a></li>
+          <li><a href="#" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Client-Centered Approach</a></li>
+          <li><a href="#" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Proven Track Record</a></li>
+          <li><a href="#" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">Testimonials</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <p style="font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:#26a9e0; margin:0 0 20px;">Contact</p>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5" style="flex-shrink:0;margin-top:2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <p style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; line-height:1.6; margin:0;">307 1 St E<br/>Cochrane, Alberta, Canada</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5" style="flex-shrink:0;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.62-.62a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:4039323333" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">403-932-3333</a>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#26a9e0" stroke-width="1.5" style="flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:ryan@flowlawyers.ca" style="font-family:'DM Sans',sans-serif; font-size:13px; color:#6b8099; text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b8099'">ryan@flowlawyers.ca</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom -->
+    <div class="footer-bottom-row" style="border-top:1px solid rgba(255,255,255,0.08); padding:24px 0; display:flex; align-items:center; justify-content:space-between; gap:16px;">
+      <p style="font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(126,146,157,0.6); margin:0;">© 2025 Flow Real Property Law. All Rights Reserved.</p>
+      <div class="footer-bottom-links" style="display:flex; gap:24px;">
+        <a href="#" style="font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(126,146,157,0.6); text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#6b8099'" onmouseout="this.style.color='rgba(126,146,157,0.6)'">Privacy Policy</a>
+        <a href="#" style="font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(126,146,157,0.6); text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#6b8099'" onmouseout="this.style.color='rgba(126,146,157,0.6)'">Terms of Service</a>
+        <a href="#" style="font-family:'DM Sans',sans-serif; font-size:11px; color:rgba(126,146,157,0.6); text-decoration:none; transition:color 0.2s ease;" onmouseover="this.style.color='#6b8099'" onmouseout="this.style.color='rgba(126,146,157,0.6)'">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

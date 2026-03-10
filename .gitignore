@@ -1,0 +1,12 @@
+node_modules/
+temporary screenshots/
+lawtio.framer.website__via=framerdevs.png
+website_eg_1.jpg
+website_eg_1.webp
+website_eg_1.xmp
+website_hero_eg.png
+screenshot.mjs
+screenshot-sections.mjs
+serve.mjs
+package.json
+package-lock.json
